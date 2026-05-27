@@ -1,64 +1,26 @@
 # Dreamine.PLC.Omron.CxComponent
 
-This package provides an Omron CX-Component adapter boundary for the Dreamine PLC communication stack.
+Omron CX-Compolet adapter boundary for Dreamine PLC communication.
 
-## Purpose
+## Important vendor runtime notice
 
-`Dreamine.PLC.Omron.CxComponent` is part of the Dreamine PLC package family.
+This package must not redistribute Omron CX-Compolet, SYSMAC Gateway, DLLs, installers, samples, or licensed runtime files.
 
-The package is designed to keep PLC communication code separated by responsibility:
+Users must install and license the required Omron software separately according to Omron's license terms.
 
-- Abstractions define contracts.
-- Core provides shared runtime infrastructure.
-- Vendor adapters implement device-specific communication.
-- WPF provides monitoring and diagnostic UI components.
+This package may only contain adapter code that integrates with a user-installed vendor runtime.
 
-## Features
+## Current status
 
-- Omron CX-Component adapter boundary
-- Vendor-specific connection option model
-- Dreamine.PLC.Core integration point
-- PLC read/write operation adapter structure
-- Isolation of vendor dependency from application layers
+This package is a vendor runtime adapter boundary and is not part of the current simulator-validated protocol line.
 
+Recommended production path:
 
-## Project References
-
-- `Dreamine.PLC.Abstractions`
-- `Dreamine.PLC.Core`
-
-## Target Framework
-
-```xml
-<TargetFramework>net8.0</TargetFramework>
-```
-
-## Package Metadata
-
-| Item | Value |
-|---|---|
-| PackageId | `Dreamine.PLC.Omron.CxComponent` |
-| Version | `1.0.0` |
-| License | `MIT` |
-| Repository | `https://github.com/CodeMaru-Dreamine/Dreamine.PLC.Omron.CxComponent` |
-| Project URL | `https://github.com/CodeMaru-Dreamine/Dreamine.PLC.FullKit` |
-
-## Architecture Rule
-
-This repository must not reference application-level projects.
-
-Dependency direction must remain one-way:
-
-```text
-Abstractions
-    ▲
-    │
-Core
-    ▲
-    │
-Vendor Adapter / WPF UI Component
-```
+- Use `Dreamine.PLC.Omron.Fins` for direct FINS TCP/UDP protocol communication.
+- Use this package only when a project explicitly requires CX-Compolet or SYSMAC Gateway integration.
 
 ## License
 
-This project is licensed under the MIT License.
+Dreamine adapter code: MIT License.
+
+Omron CX-Compolet and SYSMAC Gateway: not included and not licensed by this package.
