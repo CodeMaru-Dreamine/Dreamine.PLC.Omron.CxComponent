@@ -12,7 +12,20 @@ This package may only contain adapter code that integrates with a user-installed
 
 ## Current status
 
-This package is a vendor runtime adapter boundary and is not part of the current simulator-validated protocol line.
+This package provides a late-bound COM adapter without redistributing or directly referencing the vendor runtime.
+
+Main types:
+
+- `OmronCxComponentPlcClient`
+- `OmronCxComponentOptions`
+- `OmronCxAddressNameFormatter`
+
+The default ProgID is `OMRON.Compolet.CJ2Compolet`. The adapter opens the component through the `Active` property and calls `ReadVariable` and `WriteVariable`. Depending on the installed CX-Compolet control, `ProgId`, `PeerAddressPropertyName`, `ReadVariableMethodName`, and `WriteVariableMethodName` can be adjusted through options.
+
+Sample:
+
+- Open the `SampleSmart` PLC Monitor page and select `CxComponent`.
+- Confirm `CX ProgID` and `CX Peer`, then run `Use Client` -> `Connect`.
 
 Recommended production path:
 

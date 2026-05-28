@@ -12,7 +12,20 @@ Dreamine PLC 통신을 위한 Omron CX-Compolet 어댑터 경계 패키지입니
 
 ## 현재 상태
 
-이 패키지는 벤더 Runtime 어댑터 경계이며, 현재 시뮬레이터로 검증된 직접 프로토콜 라인에는 포함되지 않습니다.
+이 패키지는 벤더 Runtime을 직접 참조하지 않는 late-bound COM 어댑터를 제공합니다.
+
+주요 클래스:
+
+- `OmronCxComponentPlcClient`
+- `OmronCxComponentOptions`
+- `OmronCxAddressNameFormatter`
+
+기본 ProgID는 `OMRON.Compolet.CJ2Compolet`이며, `Active` 속성을 통해 연결 상태를 열고 `ReadVariable`, `WriteVariable`을 호출합니다. CX-Compolet 구성에 따라 `ProgId`, `PeerAddressPropertyName`, `ReadVariableMethodName`, `WriteVariableMethodName`을 옵션으로 조정할 수 있습니다.
+
+샘플:
+
+- `SampleSmart`의 PLC Monitor 화면에서 `CxComponent` 모드를 선택합니다.
+- `CX ProgID`, `CX Peer` 값을 확인한 뒤 `Use Client` -> `Connect` 순서로 실행합니다.
 
 권장 운영 경로:
 
