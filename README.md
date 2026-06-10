@@ -1,5 +1,7 @@
 # Dreamine.PLC.Omron.CxComponent
 
+[Korean documentation](./README_KO.md)
+
 Omron CX-Compolet adapter boundary for Dreamine PLC communication.
 
 ## Important vendor runtime notice
