@@ -79,16 +79,23 @@ public sealed class OmronCxComponentPlcClient : PlcClientBase
         var component = RequireComponent();
         var values = new bool[count];
 
-        for (var index = 0; index < count; index++)
+        try
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            for (var index = 0; index < count; index++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-            var raw = ComInvoker.Invoke(
-                component,
-                _options.ReadVariableMethodName,
-                OmronCxAddressNameFormatter.FormatOffset(address, index));
+                var raw = ComInvoker.Invoke(
+                    component,
+                    _options.ReadVariableMethodName,
+                    OmronCxAddressNameFormatter.FormatOffset(address, index));
 
-            values[index] = Convert.ToInt32(raw, CultureInfo.InvariantCulture) != 0;
+                values[index] = Convert.ToInt32(raw, CultureInfo.InvariantCulture) != 0;
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            return Task.FromResult(PlcResult<bool[]>.Failure($"CX-Compolet bit read failed. {ex.Message}"));
         }
 
         return Task.FromResult(PlcResult<bool[]>.Success(values));
@@ -103,16 +110,23 @@ public sealed class OmronCxComponentPlcClient : PlcClientBase
         var component = RequireComponent();
         var values = new short[count];
 
-        for (var index = 0; index < count; index++)
+        try
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            for (var index = 0; index < count; index++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-            var raw = ComInvoker.Invoke(
-                component,
-                _options.ReadVariableMethodName,
-                OmronCxAddressNameFormatter.FormatOffset(address, index));
+                var raw = ComInvoker.Invoke(
+                    component,
+                    _options.ReadVariableMethodName,
+                    OmronCxAddressNameFormatter.FormatOffset(address, index));
 
-            values[index] = Convert.ToInt16(raw, CultureInfo.InvariantCulture);
+                values[index] = Convert.ToInt16(raw, CultureInfo.InvariantCulture);
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            return Task.FromResult(PlcResult<short[]>.Failure($"CX-Compolet word read failed. {ex.Message}"));
         }
 
         return Task.FromResult(PlcResult<short[]>.Success(values));
@@ -126,15 +140,22 @@ public sealed class OmronCxComponentPlcClient : PlcClientBase
     {
         var component = RequireComponent();
 
-        for (var index = 0; index < values.Count; index++)
+        try
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            for (var index = 0; index < values.Count; index++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-            ComInvoker.Invoke(
-                component,
-                _options.WriteVariableMethodName,
-                OmronCxAddressNameFormatter.FormatOffset(address, index),
-                values[index] ? 1 : 0);
+                ComInvoker.Invoke(
+                    component,
+                    _options.WriteVariableMethodName,
+                    OmronCxAddressNameFormatter.FormatOffset(address, index),
+                    values[index] ? 1 : 0);
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            return Task.FromResult(PlcResult.Failure($"CX-Compolet bit write failed. {ex.Message}"));
         }
 
         return Task.FromResult(PlcResult.Success());
@@ -148,15 +169,22 @@ public sealed class OmronCxComponentPlcClient : PlcClientBase
     {
         var component = RequireComponent();
 
-        for (var index = 0; index < values.Count; index++)
+        try
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            for (var index = 0; index < values.Count; index++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
 
-            ComInvoker.Invoke(
-                component,
-                _options.WriteVariableMethodName,
-                OmronCxAddressNameFormatter.FormatOffset(address, index),
-                values[index]);
+                ComInvoker.Invoke(
+                    component,
+                    _options.WriteVariableMethodName,
+                    OmronCxAddressNameFormatter.FormatOffset(address, index),
+                    values[index]);
+            }
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            return Task.FromResult(PlcResult.Failure($"CX-Compolet word write failed. {ex.Message}"));
         }
 
         return Task.FromResult(PlcResult.Success());

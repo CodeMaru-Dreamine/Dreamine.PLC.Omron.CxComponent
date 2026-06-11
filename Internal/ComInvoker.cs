@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Reflection;
+using System.Text;
 
 namespace Dreamine.PLC.Omron.CxComponent.Internal;
 
@@ -7,23 +8,55 @@ internal static class ComInvoker
 {
     public static void SetProperty(object target, string name, object? value)
     {
-        target.GetType().InvokeMember(
-            name,
-            BindingFlags.SetProperty,
-            binder: null,
-            target,
-            [value],
-            CultureInfo.InvariantCulture);
+        try
+        {
+            target.GetType().InvokeMember(
+                name,
+                BindingFlags.SetProperty,
+                binder: null,
+                target,
+                [value],
+                CultureInfo.InvariantCulture);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            throw CreateDetailedException($"CX-Compolet property '{name}'", ex);
+        }
     }
 
     public static object? Invoke(object target, string name, params object?[] args)
     {
-        return target.GetType().InvokeMember(
-            name,
-            BindingFlags.InvokeMethod,
-            binder: null,
-            target,
-            args,
-            CultureInfo.InvariantCulture);
+        try
+        {
+            return target.GetType().InvokeMember(
+                name,
+                BindingFlags.InvokeMethod,
+                binder: null,
+                target,
+                args,
+                CultureInfo.InvariantCulture);
+        }
+        catch (TargetInvocationException ex) when (ex.InnerException is not null)
+        {
+            throw CreateDetailedException($"CX-Compolet method '{name}'", ex);
+        }
+    }
+
+    private static InvalidOperationException CreateDetailedException(
+        string operation,
+        TargetInvocationException exception)
+    {
+        var message = new StringBuilder(operation);
+        message.Append(" failed.");
+
+        for (Exception? current = exception.InnerException; current is not null; current = current.InnerException)
+        {
+            message.Append(' ')
+                .Append(current.GetType().Name)
+                .Append(": ")
+                .Append(current.Message);
+        }
+
+        return new InvalidOperationException(message.ToString(), exception.InnerException);
     }
 }
