@@ -4,8 +4,64 @@ using System.Text;
 
 namespace Dreamine.PLC.Omron.CxComponent.Internal;
 
+/// <summary>
+/// \if KO
+/// <para>후기 바인딩으로 CX-Compolet COM 멤버를 호출하는 도우미를 제공합니다.</para>
+/// \endif
+/// \if EN
+/// <para>Provides helpers for invoking late-bound CX-Compolet COM members.</para>
+/// \endif
+/// </summary>
 internal static class ComInvoker
 {
+    /// <summary>
+    /// \if KO
+    /// <para>후기 바인딩을 사용해 COM 대상의 속성 값을 설정합니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>Sets a property value on a COM target by using late binding.</para>
+    /// \endif
+    /// </summary>
+    /// <param name="target">
+    /// \if KO
+    /// <para>속성을 소유한 COM 대상입니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>The COM target that owns the property.</para>
+    /// \endif
+    /// </param>
+    /// <param name="name">
+    /// \if KO
+    /// <para>설정할 속성 이름입니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>The name of the property to set.</para>
+    /// \endif
+    /// </param>
+    /// <param name="value">
+    /// \if KO
+    /// <para>설정할 값입니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>The value to assign.</para>
+    /// \endif
+    /// </param>
+    /// <exception cref="InvalidOperationException">
+    /// \if KO
+    /// <para>COM 속성 접근자가 내부 예외를 발생시키면 상세 정보와 함께 발생합니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>Thrown with details when the COM property accessor raises an inner exception.</para>
+    /// \endif
+    /// </exception>
+    /// <exception cref="MissingMethodException">
+    /// \if KO
+    /// <para>지정한 속성 설정자를 찾을 수 없을 때 발생할 수 있습니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>May be thrown when the specified property setter cannot be found.</para>
+    /// \endif
+    /// </exception>
     public static void SetProperty(object target, string name, object? value)
     {
         try
@@ -24,6 +80,62 @@ internal static class ComInvoker
         }
     }
 
+    /// <summary>
+    /// \if KO
+    /// <para>후기 바인딩을 사용해 COM 대상의 메서드를 호출합니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>Invokes a method on a COM target by using late binding.</para>
+    /// \endif
+    /// </summary>
+    /// <param name="target">
+    /// \if KO
+    /// <para>메서드를 소유한 COM 대상입니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>The COM target that owns the method.</para>
+    /// \endif
+    /// </param>
+    /// <param name="name">
+    /// \if KO
+    /// <para>호출할 메서드 이름입니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>The name of the method to invoke.</para>
+    /// \endif
+    /// </param>
+    /// <param name="args">
+    /// \if KO
+    /// <para>메서드에 전달할 인수입니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>The arguments to pass to the method.</para>
+    /// \endif
+    /// </param>
+    /// <returns>
+    /// \if KO
+    /// <para>COM 메서드의 반환값이며 반환값이 없으면 <see langword="null"/>입니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>The COM method return value, or <see langword="null"/> when it returns no value.</para>
+    /// \endif
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    /// \if KO
+    /// <para>COM 메서드가 내부 예외를 발생시키면 상세 정보와 함께 발생합니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>Thrown with details when the COM method raises an inner exception.</para>
+    /// \endif
+    /// </exception>
+    /// <exception cref="MissingMethodException">
+    /// \if KO
+    /// <para>지정한 메서드를 찾을 수 없을 때 발생할 수 있습니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>May be thrown when the specified method cannot be found.</para>
+    /// \endif
+    /// </exception>
     public static object? Invoke(object target, string name, params object?[] args)
     {
         try
@@ -42,6 +154,38 @@ internal static class ComInvoker
         }
     }
 
+    /// <summary>
+    /// \if KO
+    /// <para>중첩된 COM 호출 예외 메시지를 보존하는 상세 예외를 만듭니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>Creates a detailed exception that preserves nested COM invocation messages.</para>
+    /// \endif
+    /// </summary>
+    /// <param name="operation">
+    /// \if KO
+    /// <para>실패한 작업 설명입니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>A description of the failed operation.</para>
+    /// \endif
+    /// </param>
+    /// <param name="exception">
+    /// \if KO
+    /// <para>COM 호출에서 발생한 래퍼 예외입니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>The wrapper exception raised by the COM invocation.</para>
+    /// \endif
+    /// </param>
+    /// <returns>
+    /// \if KO
+    /// <para>원본 내부 예외와 상세 메시지를 포함한 예외입니다.</para>
+    /// \endif
+    /// \if EN
+    /// <para>An exception containing the original inner exception and a detailed message.</para>
+    /// \endif
+    /// </returns>
     private static InvalidOperationException CreateDetailedException(
         string operation,
         TargetInvocationException exception)
